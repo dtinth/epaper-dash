@@ -163,6 +163,23 @@ button {
   margin: 0;
 }
 
+.config-tab-buttons {
+  display: flex;
+  margin-top: 12px;
+}
+
+.config-tab-buttons button {
+  flex: 1;
+  padding: 0.5em 0;
+  border: 1px solid #fff;
+  background: transparent;
+  cursor: pointer;
+}
+
+.config-tab-buttons button + button {
+  margin-left: 12px;
+}
+
 /* The fullscreen clock takes over the whole screen. */
 
 body[data-clock-fullscreen] {
