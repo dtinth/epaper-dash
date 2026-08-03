@@ -11,22 +11,7 @@ export function ConfigTab() {
         <button type="button" onClick={() => location.reload()}>
           Reload
         </button>
-        <button type="button" onClick={enterFullScreen}>
-          Full Screen
-        </button>
       </div>
     </div>
   );
-}
-
-function enterFullScreen() {
-  const el = document.documentElement as HTMLElement & {
-    webkitRequestFullscreen?: () => void;
-  };
-  if (el.requestFullscreen) {
-    // Older engines reject rather than throw; there is nothing to fall back to.
-    void el.requestFullscreen().catch(() => {});
-  } else if (el.webkitRequestFullscreen) {
-    el.webkitRequestFullscreen();
-  }
 }
