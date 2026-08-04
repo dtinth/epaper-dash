@@ -5,3 +5,6 @@ export const clockFullscreen = signal(false);
 
 /** The id of the open tab in the left panel, or null when they are all closed. */
 export const activeLeftTab = signal<string | null>(null);
+
+/** The id of the open tab in the right panel. It starts open. */
+export const activeRightTab = signal<string | null>("announcements");

@@ -1,45 +1,28 @@
+import scrollTextIcon from "@iconify-icons/lucide/scroll-text";
 import settingsIcon from "@iconify-icons/lucide/settings";
-import type { IconifyIcon } from "@iconify/types";
-import type { ComponentChildren } from "preact";
 import { ConfigTab } from "./ConfigTab.tsx";
-import { Icon } from "./Icon.tsx";
+import { LogTab } from "./LogTab.tsx";
 import { activeLeftTab } from "./state.ts";
+import { TabBar, type Tab } from "./TabBar.tsx";
 
-interface Tab {
-  id: string;
-  icon: IconifyIcon;
-  content: ComponentChildren;
-}
-
-const tabs: Tab[] = [{ id: "config", icon: settingsIcon, content: <ConfigTab /> }];
+const tabs: Tab[] = [
+  { id: "config", icon: settingsIcon, content: <ConfigTab /> },
+  { id: "log", icon: scrollTextIcon, content: <LogTab /> },
+];
 
 export function LeftTabs() {
   const active = activeLeftTab.value;
+  const openTab = tabs.filter((tab) => tab.id === active)[0];
   return (
     <div>
-      {tabs
-        .filter((tab) => tab.id === active)
-        .map((tab) => (
-          <div class="tab-panel" key={tab.id}>
-            {tab.content}
-          </div>
-        ))}
-      <div class="tab-bar">
-        {tabs.map((tab) => (
-          <button
-            type="button"
-            class="tab-button"
-            key={tab.id}
-            data-active={tab.id === active}
-            onClick={() => {
-              activeLeftTab.value = active === tab.id ? null : tab.id;
-            }}
-          >
-            <Icon icon={tab.icon} />
-          </button>
-        ))}
-        <div class="tab-bar-filler"></div>
-      </div>
+      {openTab ? <div class="tab-panel">{openTab.content}</div> : null}
+      <TabBar
+        tabs={tabs}
+        active={active}
+        onSelect={(id) => {
+          activeLeftTab.value = id;
+        }}
+      />
     </div>
   );
 }
