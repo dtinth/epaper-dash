@@ -1,7 +1,8 @@
 import type { Announcement, Api } from "./api.ts";
 
+// MP3, because NeoBrowser answers "no" to both Ogg Vorbis and Ogg Opus.
 const MOCK_AUDIO_URL =
-  "https://im.dt.in.th/ipfs/bafybeih46oifjjk7hzncm7emzdhzxcxdllig2gch6hmgivtwvn2qk463aq/ready-aiden.ogg";
+  "https://im.dt.in.th/ipfs/bafybeibqvr7timhmbwjzbufwarjxdolim4wtcof3ndrei5uolc6k64xfzq/ready-aiden.mp3";
 
 /** Newest first, like the live service is expected to answer. */
 let announcements: Announcement[] = [];
