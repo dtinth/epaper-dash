@@ -29,6 +29,7 @@ let started = false;
 export function startAnnouncer() {
   if (started) return;
   started = true;
+  logAudioSupport();
   void pollForever();
   watchSettings();
 }
@@ -126,21 +127,28 @@ async function show(announcement: Announcement, onDemand: boolean) {
 }
 
 async function play(url: string) {
-  let source = url;
   let objectUrl = "";
   try {
     // Downloading first keeps the whole file ready before the bubble appears,
-    // but it needs CORS. Playing the URL directly does not, so that is the
-    // fallback.
-    const response = await fetch(url);
-    if (!response.ok) throw new Error("HTTP " + response.status);
-    objectUrl = URL.createObjectURL(await response.blob());
-    source = objectUrl;
-  } catch (error) {
-    logError("tts: cannot download the audio, plays it directly", error);
-  }
-  try {
-    await playSource(source);
+    // but it needs CORS.
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error("HTTP " + response.status);
+      objectUrl = URL.createObjectURL(await response.blob());
+    } catch (error) {
+      logError("tts: cannot download the audio", error);
+    }
+    // An engine that refuses the downloaded copy sometimes accepts the URL,
+    // because then it reads the type from the server and not from the blob.
+    if (objectUrl) {
+      try {
+        await playSource(objectUrl);
+        return;
+      } catch (error) {
+        logError("tts: the copy does not play, tries the URL", error);
+      }
+    }
+    await playSource(url);
   } finally {
     if (objectUrl) URL.revokeObjectURL(objectUrl);
   }
@@ -150,11 +158,46 @@ function playSource(source: string) {
   return new Promise<void>((resolve, reject) => {
     const audio = new Audio();
     audio.addEventListener("ended", () => resolve());
-    audio.addEventListener("error", () => reject(new Error("the browser cannot play this audio")));
+    audio.addEventListener("error", () => reject(new Error(describeMediaError(audio))));
     audio.src = source;
     const result = audio.play() as Promise<void> | undefined;
     if (result && result.catch) result.catch(reject);
   });
+}
+
+const MEDIA_ERRORS: Record<number, string> = {
+  1: "the browser stopped the audio",
+  2: "network error while it reads the audio",
+  3: "the browser cannot decode this audio",
+  4: "the browser does not support this audio format",
+};
+
+function describeMediaError(audio: HTMLAudioElement) {
+  const error = audio.error;
+  if (!error) return "the browser cannot play this audio";
+  const name = MEDIA_ERRORS[error.code] || "media error " + error.code;
+  return error.message ? name + " (" + error.message + ")" : name;
+}
+
+/**
+ * Writes what the engine says it can play. On a device with no developer tools
+ * this line is the fastest way to see if the format is the problem.
+ */
+function logAudioSupport() {
+  const audio = new Audio();
+  const types = [
+    "audio/ogg; codecs=vorbis",
+    "audio/ogg; codecs=opus",
+    "audio/mpeg",
+    "audio/mp4; codecs=mp4a.40.2",
+    "audio/wav",
+  ];
+  const parts: string[] = [];
+  for (const type of types) {
+    const name = type.replace("audio/", "").replace("; codecs=", " ");
+    parts.push(name + ": " + (audio.canPlayType(type) || "no"));
+  }
+  log("audio support: " + parts.join(", "));
 }
 
 function delay(ms: number) {
