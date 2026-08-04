@@ -11,7 +11,7 @@ export function AnnouncementsTab() {
         <li key={announcement.id}>
           {/* Touching an announcement plays it again, which is how you test
               the audio without waiting for a real one. */}
-          <button type="button" onClick={() => announce(announcement)}>
+          <button type="button" onClick={() => announce(announcement, { onDemand: true })}>
             <div class="announcement-text">{announcement.text}</div>
             {announcement.audioUrl ? null : <div class="announcement-note">No audio</div>}
           </button>

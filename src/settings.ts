@@ -7,11 +7,18 @@ export interface Settings {
   /** Base URL of the RPC endpoint, without a trailing slash. */
   endpoint: string;
   secret: string;
+  /** When true, an announcement that arrives on its own shows but stays quiet. */
+  silent: boolean;
 }
 
 const STORAGE_KEY = "epaper-dash.settings";
 
-const defaults: Settings = { mode: "mock", endpoint: "", secret: "" };
+const defaults: Settings = {
+  mode: "mock",
+  endpoint: "",
+  secret: "",
+  silent: false,
+};
 
 function load(): Settings {
   try {
@@ -22,6 +29,7 @@ function load(): Settings {
       mode: parsed.mode === "live" ? "live" : "mock",
       endpoint: String(parsed.endpoint || ""),
       secret: String(parsed.secret || ""),
+      silent: parsed.silent === true,
     };
   } catch {
     return defaults;

@@ -48,8 +48,7 @@ button {
   bottom: 0;
   background: black;
   color: white;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -67,12 +66,18 @@ button {
 }
 
 .clock-container {
-  flex: 1 1 auto;
-  /* Lets the clock give room to an open tab instead of pushing the tab bar
-     off the bottom of the panel. */
-  min-height: 0;
-  overflow: hidden;
+  flex: 1;
   cursor: pointer;
+}
+
+/* The left tabs are a popup: they sit over the clock instead of taking room
+   from it, so opening one never moves the clock. */
+.tabs-container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #000;
 }
 
 /* The clock. */
@@ -159,7 +164,7 @@ button {
   border-top: 1px solid #fff;
   font-size: 16px;
   /* A tall tab scrolls inside itself, so the tab bar stays reachable. */
-  max-height: 40vh;
+  max-height: 70vh;
   overflow-x: hidden;
   overflow-y: auto;
 }
@@ -236,15 +241,15 @@ button {
 }
 
 .log-empty {
-  margin-top: 12px;
+  margin-bottom: 12px;
   opacity: 0.7;
 }
 
 .log-list {
   list-style: none;
-  margin: 12px 0 0;
+  margin: 0 0 12px;
   padding: 0;
-  max-height: 40vh;
+  max-height: 50vh;
   overflow-x: hidden;
   overflow-y: auto;
 }

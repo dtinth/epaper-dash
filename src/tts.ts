@@ -96,17 +96,25 @@ function accept(announcements: Announcement[]) {
 
 let queue: Promise<void> = Promise.resolve();
 
-/** Adds an announcement to the queue. Only one plays at a time. */
-export function announce(announcement: Announcement) {
-  queue = queue.then(() => show(announcement));
+/**
+ * Adds an announcement to the queue. Only one plays at a time.
+ *
+ * Silent mode suppresses the audio of announcements that arrive on their own,
+ * but a touch on one in the announcements tab is a deliberate act, so that one
+ * still plays.
+ */
+export function announce(announcement: Announcement, options: { onDemand?: boolean } = {}) {
+  queue = queue.then(() => show(announcement, options.onDemand === true));
 }
 
-async function show(announcement: Announcement) {
+async function show(announcement: Announcement, onDemand: boolean) {
   currentAnnouncement.value = announcement;
+  const quiet = settings.value.silent && !onDemand;
   try {
-    if (announcement.audioUrl) {
+    if (announcement.audioUrl && !quiet) {
       await play(announcement.audioUrl);
     } else {
+      if (announcement.audioUrl) log("tts: silent mode, the audio stays off");
       await delay(SILENT_DURATION);
     }
   } catch (error) {

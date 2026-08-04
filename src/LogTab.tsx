@@ -4,11 +4,6 @@ export function LogTab() {
   const entries = logs.value;
   return (
     <div class="log-tab">
-      <div class="button-row">
-        <button type="button" onClick={clearLogs}>
-          Clear
-        </button>
-      </div>
       {entries.length === 0 ? (
         <div class="log-empty">No messages.</div>
       ) : (
@@ -21,6 +16,13 @@ export function LogTab() {
           ))}
         </ul>
       )}
+      {/* The panel hangs off the bottom of the screen, so the button belongs
+          at the bottom too, where the thumb already is. */}
+      <div class="button-row">
+        <button type="button" onClick={clearLogs}>
+          Clear
+        </button>
+      </div>
     </div>
   );
 }

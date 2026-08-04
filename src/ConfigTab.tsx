@@ -2,7 +2,7 @@ import { addMockAnnouncement } from "./mock.ts";
 import { settings, updateSettings } from "./settings.ts";
 
 export function ConfigTab() {
-  const { mode, endpoint, secret } = settings.value;
+  const { mode, endpoint, secret, silent } = settings.value;
   return (
     <div class="config-tab">
       <div class="field">
@@ -21,6 +21,26 @@ export function ConfigTab() {
             onClick={() => updateSettings({ mode: "live" })}
           >
             Live
+          </button>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">Sound</div>
+        <div class="button-row">
+          <button
+            type="button"
+            data-active={!silent}
+            onClick={() => updateSettings({ silent: false })}
+          >
+            On
+          </button>
+          <button
+            type="button"
+            data-active={silent}
+            onClick={() => updateSettings({ silent: true })}
+          >
+            Silent
           </button>
         </div>
       </div>
