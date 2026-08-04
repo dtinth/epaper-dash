@@ -278,6 +278,37 @@ button {
 
 /* The announcements tab in the right panel. */
 
+/* Stays at the top while the list scrolls under it. An engine without sticky
+   simply lets it scroll away, which is no worse than not having it. */
+.announcements-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #fff;
+  border-bottom: 1px solid #000;
+}
+
+.announcements-header button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 8px 12px;
+  border: 0;
+  background: transparent;
+  font-size: 16px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.announcements-header button[data-silent="true"] {
+  font-weight: bold;
+}
+
+.announcements-header svg {
+  flex: 0 0 auto;
+  margin-right: 8px;
+}
+
 .announcements-empty {
   padding: 12px;
   font-size: 16px;
