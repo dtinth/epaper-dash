@@ -1,5 +1,4 @@
-import { useSignal } from "@preact/signals";
-import { useEffect } from "preact/hooks";
+import { now } from "./now.ts";
 
 const weekdayFormat = new Intl.DateTimeFormat("en-US", { weekday: "long" });
 const dayFormat = new Intl.DateTimeFormat("en-US", {
@@ -8,14 +7,6 @@ const dayFormat = new Intl.DateTimeFormat("en-US", {
 });
 
 export function Clock() {
-  const now = useSignal(new Date());
-  useEffect(() => {
-    const timer = setInterval(() => {
-      now.value = new Date();
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
-
   const date = now.value;
   const time = (
     <>

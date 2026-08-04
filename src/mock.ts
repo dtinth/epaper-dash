@@ -24,6 +24,7 @@ export function addMockAnnouncement(options: { withAudio: boolean }) {
     id: "mock-" + counter + "-" + Date.now(),
     text: "Test announcement",
     audioUrl: options.withAudio ? MOCK_AUDIO_URL : undefined,
+    time: new Date().toISOString(),
   };
   announcements = [announcement, ...announcements].slice(0, 20);
   return announcement;

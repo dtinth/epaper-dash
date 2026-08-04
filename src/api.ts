@@ -6,6 +6,8 @@ export interface Announcement {
   id: string;
   text: string;
   audioUrl?: string;
+  /** ISO 8601, as `new Date().toISOString()` gives it. */
+  time: string;
 }
 
 export interface GetLatestAnnouncementsResult {
